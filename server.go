@@ -33,7 +33,10 @@ func createUser(c echo.Context) error {
 }
 
 func getUser(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		panic(err.Error())
+	}
 	return c.JSON(http.StatusOK, users[id])
 }
 
@@ -42,13 +45,19 @@ func updateUser(c echo.Context) error {
 	if err := c.Bind(u); err != nil {
 		return err
 	}
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, errConv := strconv.Atoi(c.Param("id"))
+	if errConv != nil {
+		panic(errConv.Error())
+	}
 	users[id].Name = u.Name
 	return c.JSON(http.StatusOK, users[id])
 }
 
 func deleteUser(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		panic(err.Error())
+	}
 	delete(users, id)
 	return c.NoContent(http.StatusNoContent)
 }
